@@ -39,13 +39,13 @@ def main():
     test_data = read_data(word2id, config.max_aspect_len, config.max_sentence_len, config.dataset + 'test',
                           config.pre_processed)
     print('Loading pre-trained word vectors ...')
-    # config.embedding = load_word_embeddings(config.embedding_file_name, config.embedding_size, word2id)
+    config.embedding = load_word_embeddings(config.embedding_file_name, config.embedding_size, word2id)
     train_dataset = GCAEDataset(train_data)
     test_dataset = GCAEDataset(test_data)
     train_loader = DataLoader(dataset=train_dataset, batch_size=config.batch_size, shuffle=True, num_workers=2)
     test_loader = DataLoader(dataset=test_dataset, batch_size=config.batch_size, shuffle=True, num_workers=2)
     embedding = nn.Embedding(config.vocab_size, config.embedding_size)
-    # embedding.weight.data.copy_(torch.from_numpy(config.embedding))
+    embedding.weight.data.copy_(torch.from_numpy(config.embedding))
     model = GCAE(
         embedding=embedding,
         kernel_num=100,

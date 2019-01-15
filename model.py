@@ -52,10 +52,11 @@ class GCAE(nn.Module):
         aspect = self._aspect_linear(aspect)
         sentence = torch.cat([
             torch.max(
-                F.tanh(conv(sentence.transpose(1, 2))) * F.relu(conv_gate(sentence.transpose(1, 2)) + aspect.unsqueeze(2)),
+                torch.tanh(conv(sentence.transpose(1, 2))) * F.relu(conv_gate(sentence.transpose(1, 2)) + aspect.unsqueeze(2)),
                 dim=-1
             )[0] for conv, conv_gate in zip(self._sentence_conv, self._sentence_conv_gate)
         ], dim=1)
+        sentence = self._dropout(sentence)
         logit = self._linear(sentence)
         return logit
 
